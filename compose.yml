@@ -1,0 +1,11 @@
+services:
+  mysql:
+    container_name: 'database-mysql'
+    image: 'mysql:8.0'
+    environment:
+      - 'MYSQL_DATABASE=gerenciaprodutos'
+      - 'MYSQL_PASSWORD=gerencia@1234'
+      - 'MYSQL_ROOT_PASSWORD=gerencia@1234'
+      - 'MYSQL_USER=gerencia'
+    ports:
+      - '3306:3306'
