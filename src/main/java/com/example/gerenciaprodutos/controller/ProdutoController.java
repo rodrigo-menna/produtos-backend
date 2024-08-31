@@ -1,10 +1,6 @@
 package com.example.gerenciaprodutos.controller;
 
-import com.example.gerenciaprodutos.model.Categoria;
 import com.example.gerenciaprodutos.model.Produto;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaDeleteRequestBody;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaPostRequestBody;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaPutRequestBody;
 import com.example.gerenciaprodutos.requests.produto.ProdutoDeleteRequestBody;
 import com.example.gerenciaprodutos.requests.produto.ProdutoPostRequestBody;
 import com.example.gerenciaprodutos.requests.produto.ProdutoPutRequestBody;
