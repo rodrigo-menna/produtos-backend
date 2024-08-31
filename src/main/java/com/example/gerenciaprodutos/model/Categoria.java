@@ -18,6 +18,6 @@ public class Categoria {
     @Column(name = "NOME", nullable = false)
     private String nome;
 
-    @OneToMany(mappedBy = "idCategoria")
-    private Set<Produto> produtos;
+//    @OneToMany(mappedBy = "idCategoria")
+//    private Set<Produto> produtos;
 }
