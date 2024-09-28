@@ -3,14 +3,16 @@ package com.example.gerenciaprodutos.service;
 import com.example.gerenciaprodutos.mapper.CategoriaMapper;
 import com.example.gerenciaprodutos.model.Categoria;
 import com.example.gerenciaprodutos.repository.CategoriaRepository;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaDeleteRequestBody;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaPostRequestBody;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaPutRequestBody;
+import com.example.gerenciaprodutos.dto.categoria.CategoriaPostRequestBody;
+import com.example.gerenciaprodutos.dto.categoria.CategoriaPutRequestBody;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -20,27 +22,28 @@ public class CategoriaService {
     private final CategoriaRepository repository;
 
     public Categoria create(CategoriaPostRequestBody requestBody) {
-        return this.repository.save(CategoriaMapper.INSTANCE.toCategoria(requestBody));
+        Categoria categoria = CategoriaMapper.INSTANCE.toCategoria(requestBody);
+        categoria.setDataCriacao(new Date());
+        return this.repository.save(categoria);
     }
 
-    public Optional<Categoria> findById(Long id) throws BadRequestException {
-        return Optional.ofNullable(this.repository.findById(id).orElseThrow(() -> new BadRequestException("Categgoria não encontrada")));
+    public Optional<Categoria> findById(Long id) {
+        return Optional.ofNullable(this.repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Categgoria não encontrada")));
     }
 
-    public List<Categoria> findAll() {
-        return this.repository.findAll();
+    public Page<Categoria> findAll(Pageable pageable) {
+        return this.repository.findAll(pageable);
     }
 
     public void update(CategoriaPutRequestBody requestBody) throws BadRequestException {
         Optional<Categoria> found = findById(requestBody.getId());
         Categoria categoria = CategoriaMapper.INSTANCE.toCategoria(requestBody);
+        categoria.setDataAtualizacao(new Date());
         categoria.setId(found.get().getId());
         this.repository.save(categoria);
     }
 
-
-    public void delete(CategoriaDeleteRequestBody categoriaDeleteRequestBody) throws BadRequestException {
-        Optional<Categoria> categoria = findById(categoriaDeleteRequestBody.getId());
-        this.repository.deleteById(categoriaDeleteRequestBody.getId());
+    public void delete(Long id) {
+        this.repository.deleteById(id);
     }
 }

@@ -5,17 +5,9 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "TB_CATEGORIA")
-public class Categoria {
+@Table(name = "tb_categoria")
+public class Categoria extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID", nullable = false)
-    private Long id;
-
-    @Column(name = "NOME", nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
-
-//    @OneToMany(mappedBy = "idCategoria")
-//    private Set<Produto> produtos;
 }

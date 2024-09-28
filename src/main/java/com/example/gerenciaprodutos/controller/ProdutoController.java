@@ -1,9 +1,8 @@
 package com.example.gerenciaprodutos.controller;
 
+import com.example.gerenciaprodutos.dto.produto.ProdutoPostRequestBody;
+import com.example.gerenciaprodutos.dto.produto.ProdutoPutRequestBody;
 import com.example.gerenciaprodutos.model.Produto;
-import com.example.gerenciaprodutos.requests.produto.ProdutoDeleteRequestBody;
-import com.example.gerenciaprodutos.requests.produto.ProdutoPostRequestBody;
-import com.example.gerenciaprodutos.requests.produto.ProdutoPutRequestBody;
 import com.example.gerenciaprodutos.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,18 +20,23 @@ import java.util.Optional;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/produto")
+@RequestMapping("/api/produto")
 public class ProdutoController {
 
     private final ProdutoService service;
 
-    @Transactional
     @PostMapping("/create")
     public ResponseEntity<Produto> create(@RequestBody @Valid ProdutoPostRequestBody produtoPostRequestBody) {
         return new ResponseEntity<>(service.create(produtoPostRequestBody), HttpStatus.CREATED);
     }
 
-    @GetMapping("/find")
+    @Transactional
+    @PostMapping("/create/file")
+    public ResponseEntity<Produto> createWithFile(@RequestPart ProdutoPostRequestBody produto, @RequestPart("file") MultipartFile file) {
+        return new ResponseEntity<>(service.createWithFile(produto, file), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get")
     public ResponseEntity<List<Produto>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
@@ -41,17 +46,23 @@ public class ProdutoController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @Transactional
     @PatchMapping("/update")
     public ResponseEntity<Void> update(@RequestBody @Valid ProdutoPutRequestBody categoriaPutRequestBody) throws BadRequestException {
         service.update(categoriaPutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+//    @Transactional
+//    @PatchMapping("/update")
+//    public ResponseEntity<Void> updateWithFile(@RequestPart ProdutoPutRequestBody produto, @RequestPart("file") MultipartFile file) throws BadRequestException {
+//        service.updateWithImage(produto, file);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
+
     @Transactional
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody ProdutoDeleteRequestBody produtoDeleteRequestBody) throws BadRequestException {
-        this.service.delete(produtoDeleteRequestBody);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws BadRequestException {
+        this.service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

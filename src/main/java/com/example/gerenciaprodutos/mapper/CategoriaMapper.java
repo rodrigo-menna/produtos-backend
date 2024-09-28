@@ -1,9 +1,9 @@
 package com.example.gerenciaprodutos.mapper;
 
 import com.example.gerenciaprodutos.model.Categoria;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaDeleteRequestBody;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaPostRequestBody;
-import com.example.gerenciaprodutos.requests.categoria.CategoriaPutRequestBody;
+import com.example.gerenciaprodutos.dto.categoria.CategoriaDeleteRequestBody;
+import com.example.gerenciaprodutos.dto.categoria.CategoriaPostRequestBody;
+import com.example.gerenciaprodutos.dto.categoria.CategoriaPutRequestBody;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

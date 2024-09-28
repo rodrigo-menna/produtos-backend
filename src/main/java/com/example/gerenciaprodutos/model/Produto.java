@@ -1,39 +1,41 @@
 package com.example.gerenciaprodutos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
-@Table(name = "TB_PRODUTO")
-@EqualsAndHashCode(exclude = {"descricao", "preco", "data_validade", "image"})
-public class Produto {
+@Table(name = "tb_produto")
+@EqualsAndHashCode(exclude = {"descricao", "preco", "data_validade"}, callSuper = true)
+public class Produto extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID", nullable = false)
-    private Long id;
-
-    @Column(name = "NOME", nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "DESCRICAO", nullable = true)
+    @Column(name = "descricao", nullable = true)
     private String descricao;
 
-    @Column(name = "PREÇO", nullable = false)
+    @Column(name = "preco", nullable = false)
     private Double preco;
 
-    @Column(name = "DATA_VALIDADE", nullable = false)
+    @Column(name = "data_validade", nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate data_validade;
 
-    @Column(name = "IMAGE_PATH", nullable = false)
-    private String image;
-
     @ManyToOne
-    @JoinColumn(name = "CATEGORIA_ID", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false)
     private Categoria categoria;
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+    private List<ProdutoImagem> imagens;
+
+    public Produto() {
+        imagens = new ArrayList<>();
+    }
 }

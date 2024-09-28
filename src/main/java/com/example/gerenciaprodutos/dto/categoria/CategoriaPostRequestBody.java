@@ -1,4 +1,4 @@
-package com.example.gerenciaprodutos.requests.categoria;
+package com.example.gerenciaprodutos.dto.categoria;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

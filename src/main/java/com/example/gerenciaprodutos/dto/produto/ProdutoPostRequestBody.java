@@ -1,7 +1,6 @@
-package com.example.gerenciaprodutos.requests.produto;
+package com.example.gerenciaprodutos.dto.produto;
 
 import com.example.gerenciaprodutos.model.Categoria;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,10 +20,8 @@ public class ProdutoPostRequestBody {
     private Double preco;
 
     @FutureOrPresent(message = "Campo Data Inválido")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data_validade;
 
-    @NotBlank(message = "Campo IMAGEM Obrigatório")
     private String image;
 
     private Categoria categoria;

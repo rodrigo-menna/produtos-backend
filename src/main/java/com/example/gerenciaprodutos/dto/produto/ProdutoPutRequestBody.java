@@ -1,4 +1,4 @@
-package com.example.gerenciaprodutos.requests.produto;
+package com.example.gerenciaprodutos.dto.produto;
 
 import com.example.gerenciaprodutos.model.Categoria;
 import jakarta.validation.constraints.NotNull;
