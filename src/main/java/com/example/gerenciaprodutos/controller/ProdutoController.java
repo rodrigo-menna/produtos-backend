@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Optional<Produto>> findById(@PathVariable Long id) throws BadRequestException {
+    public ResponseEntity<Produto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -52,16 +51,9 @@ public class ProdutoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @Transactional
-//    @PatchMapping("/update")
-//    public ResponseEntity<Void> updateWithFile(@RequestPart ProdutoPutRequestBody produto, @RequestPart("file") MultipartFile file) throws BadRequestException {
-//        service.updateWithImage(produto, file);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
-
     @Transactional
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) throws BadRequestException {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

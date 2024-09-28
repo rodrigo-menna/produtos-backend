@@ -1,8 +1,8 @@
 package com.example.gerenciaprodutos.controller;
 
-import com.example.gerenciaprodutos.model.Categoria;
-import com.example.gerenciaprodutos.dto.categoria.CategoriaPutRequestBody;
 import com.example.gerenciaprodutos.dto.categoria.CategoriaPostRequestBody;
+import com.example.gerenciaprodutos.dto.categoria.CategoriaPutRequestBody;
+import com.example.gerenciaprodutos.model.Categoria;
 import com.example.gerenciaprodutos.service.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 
 @Log4j2
@@ -38,13 +36,13 @@ public class CategoriaController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Optional<Categoria>> findById(@PathVariable Long id) throws BadRequestException {
+    public ResponseEntity<Categoria> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @Transactional
     @PatchMapping("/update")
-    public ResponseEntity<Void> update(@RequestBody @Valid CategoriaPutRequestBody categoriaPutRequestBody) throws BadRequestException {
+    public ResponseEntity<Void> update(@RequestBody @Valid CategoriaPutRequestBody categoriaPutRequestBody)  {
         service.update(categoriaPutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

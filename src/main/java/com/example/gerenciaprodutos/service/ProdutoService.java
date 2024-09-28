@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class ProdutoService {
 
     public Produto create(ProdutoPostRequestBody requestBody) {
         Produto postProduto = ProdutoMapper.INSTANCE.toPostProduto(requestBody);
+        postProduto.setCategoria(categoriaService.findById(requestBody.getCategoria().getId()));
         postProduto.setDataCriacao(new Date());
         return this.produtoRepository.save(postProduto);
     }
@@ -32,13 +32,13 @@ public class ProdutoService {
     public Produto createWithFile(ProdutoPostRequestBody requestBody, MultipartFile file) {
         Produto postProduto = ProdutoMapper.INSTANCE.toPostProduto(requestBody);
         postProduto.setDataCriacao(new Date());
-        postProduto.setCategoria(categoriaService.findById(postProduto.getCategoria().getId()).get());
+        postProduto.setCategoria(categoriaService.findById(postProduto.getCategoria().getId()));
         produtoImagensService.create(postProduto, file);
         return produtoRepository.save(postProduto);
     }
 
-    public Optional<Produto> findById(Long id) {
-        return Optional.ofNullable(this.produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto não encontrada")));
+    public Produto findById(Long id) {
+        return this.produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto não encontrada"));
     }
 
     public List<Produto> findAll() {
@@ -46,23 +46,23 @@ public class ProdutoService {
     }
 
     public void update(ProdutoPutRequestBody requestBody) throws BadRequestException {
-        Optional<Produto> found = findById(requestBody.getId());
+        Produto found = findById(requestBody.getId());
         Produto produto = ProdutoMapper.INSTANCE.toPutProduto(requestBody);
-        produto.setId(found.get().getId());
+        produto.setId(found.getId());
         this.produtoRepository.save(produto);
     }
 
     public void updateWithImage(ProdutoPutRequestBody requestBody, MultipartFile file) throws BadRequestException {
-        Optional<Produto> found = findById(requestBody.getId());
+        Produto found = findById(requestBody.getId());
         Produto produto = ProdutoMapper.INSTANCE.toPutProduto(requestBody);
-        produto.setId(found.get().getId());
+        produto.setId(found.getId());
 //        List<ProdutoImageResponseBody> byProdutoId = produtoImagensService.findByProdutoId(requestBody.getId());
 
         this.produtoRepository.save(produto);
     }
 
-    public void delete(Long id) throws BadRequestException {
-        Optional<Produto> produto = findById(id);
-        this.produtoRepository.deleteById(produto.get().getId());
+    public void delete(Long id) {
+        Produto produto = findById(id);
+        this.produtoRepository.deleteById(produto.getId());
     }
 }
