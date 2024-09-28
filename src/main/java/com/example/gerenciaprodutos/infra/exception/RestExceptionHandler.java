@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class RestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionMessageDetails> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+    public ResponseEntity<ExceptionMessageDetails> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         String fields = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
         String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(Collectors.joining(", "));
 
@@ -26,35 +26,36 @@ public class RestExceptionHandler {
                 ExceptionMessageDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status((HttpStatus.BAD_REQUEST.value()))
-                        .title("Bad Request Exception")
+                        .title("Method Argument Not Valid Exception")
                         .details("Check the fields erros")
-                        .fields(fields)
+                        .fields(fields.toUpperCase())
                         .fieldsMessage(fieldsMessage)
-                        .developerMessage(exception.getClass().getName())
+                        .developerMessage(e.getClass().getName())
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ExceptionMessageDetails> handleBadRequestException(BadRequestException bre) {
+    public ResponseEntity<ExceptionMessageDetails> handleBadRequestException(BadRequestException e) {
         return new ResponseEntity<>(
                 ExceptionMessageDetails.builder()
                         .timestamp(LocalDateTime.now())
                         .status((HttpStatus.BAD_REQUEST.value()))
                         .title("Bad Request Exception")
-                        .details(bre.getMessage())
-                        .developerMessage(bre.getClass().getName())
+                        .details(e.getMessage())
+                        .developerMessage(e.getClass().getName())
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ExceptionMessageDetails> handleEntityNotFoundException(EntityNotFoundException exception) {
+    public ResponseEntity<ExceptionMessageDetails> handleEntityNotFoundException(EntityNotFoundException e) {
         return new ResponseEntity<>(
                 ExceptionMessageDetails.builder()
                         .timestamp(LocalDateTime.now())
-                        .status((HttpStatus.BAD_REQUEST.value()))
-                        .title("Bad Request Exception")
+                        .status((HttpStatus.NOT_FOUND.value()))
+                        .title("Not Found Exception")
                         .details("Entity or Field not Found")
-                        .developerMessage(exception.getClass().getName())
+                        .details(e.getMessage())
+                        .developerMessage(e.getClass().getName())
                         .build(), HttpStatus.BAD_REQUEST);
     }
 }
