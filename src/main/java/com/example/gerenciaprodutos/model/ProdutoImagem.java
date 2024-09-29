@@ -17,6 +17,7 @@ public class ProdutoImagem extends BaseEntity{
     @JsonIgnore
     private Produto produto;
 
-    @Transient
-    private byte[] arquivo;
+    @Lob
+    @Column(name="imagem", columnDefinition="mediumblob")
+    private byte[] imagem;
 }

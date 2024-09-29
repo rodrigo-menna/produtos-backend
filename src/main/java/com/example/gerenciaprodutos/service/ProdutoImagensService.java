@@ -1,22 +1,14 @@
 package com.example.gerenciaprodutos.service;
 
-import com.example.gerenciaprodutos.mapper.ProdutoImagemMapper;
 import com.example.gerenciaprodutos.model.Produto;
 import com.example.gerenciaprodutos.model.ProdutoImagem;
 import com.example.gerenciaprodutos.repository.ProdutoImagensRepository;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,18 +26,7 @@ public class ProdutoImagensService {
     }
 
     public List<ProdutoImagem> findByProdutoId(Long id) {
-        List<ProdutoImagem> listProdutoImagemEncontrados = produtoImagensRepository.findByProdutoId(id);
-        List<ProdutoImagem> listProdutoImagem = new ArrayList<>();
-        for (ProdutoImagem imagens : listProdutoImagemEncontrados) {
-            try (InputStream in = new FileInputStream(diretorioImagens + imagens.getNome())) {
-                ProdutoImagem produtoImagem = ProdutoImagemMapper.INSTANCE.toProdutoImage(imagens);
-                produtoImagem.setArquivo(IOUtils.toByteArray(in));
-                listProdutoImagem.add(produtoImagem);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return listProdutoImagem;
+        return produtoImagensRepository.findByProdutoId(id);
     }
 
     public void create(Produto produto, MultipartFile file) {
@@ -54,10 +35,8 @@ public class ProdutoImagensService {
             if (!file.isEmpty()) {
                 byte[] bytes = file.getBytes();
                 String nomeImagem = String.valueOf(file.getOriginalFilename());
-                Path caminho = Paths.get(diretorioImagens + nomeImagem);
-                Files.write(caminho, bytes);
                 produtoImagensNovo.setNome(nomeImagem);
-                produtoImagensNovo.setArquivo(bytes);
+                produtoImagensNovo.setImagem(bytes);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,10 +4,13 @@ import com.example.gerenciaprodutos.dto.produto.ProdutoPostRequestBody;
 import com.example.gerenciaprodutos.dto.produto.ProdutoPutRequestBody;
 import com.example.gerenciaprodutos.mapper.ProdutoMapper;
 import com.example.gerenciaprodutos.model.Produto;
+import com.example.gerenciaprodutos.model.ProdutoImagem;
 import com.example.gerenciaprodutos.repository.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,11 +41,14 @@ public class ProdutoService {
     }
 
     public Produto findById(Long id) {
-        return this.produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto não encontrada"));
+        Produto produto = produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto não encontrada"));
+        List<ProdutoImagem> produtoImagemList = produtoImagensService.findByProdutoId(produto.getId());
+        produto.setImagens(produtoImagemList);
+        return produto ;
     }
 
-    public List<Produto> findAll() {
-        return this.produtoRepository.findAll();
+    public Page<Produto> findAll(Pageable pageable) {
+        return this.produtoRepository.findAll(pageable);
     }
 
     public void update(ProdutoPutRequestBody requestBody) throws BadRequestException {

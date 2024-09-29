@@ -34,10 +34,9 @@ public class CategoriaService {
     }
 
     public void update(CategoriaPutRequestBody requestBody) {
-        Categoria found = findById(requestBody.getId());
+        findById(requestBody.getId());
         Categoria categoria = CategoriaMapper.INSTANCE.toCategoria(requestBody);
         categoria.setDataAtualizacao(new Date());
-        categoria.setId(found.getId());
         this.repository.save(categoria);
     }
 
