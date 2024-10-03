@@ -47,9 +47,24 @@ public class ProdutoImagensService {
         produto.getImagens().add(produtoImagensNovo);
     }
 
-    public ProdutoImagem update(ProdutoImagem produtoImagens) {
+    public void updateWithFile(Produto produto, MultipartFile file) {
+        List<ProdutoImagem> byProdutoId = produtoImagensRepository.findByProdutoId(produto.getId());
+        ProdutoImagem produtoImagens = new ProdutoImagem();
+        try {
+            if (!file.isEmpty()) {
+                byte[] bytes = file.getBytes();
+                String nomeImagem = String.valueOf(file.getOriginalFilename());
+                produtoImagens.setNome(nomeImagem);
+                produtoImagens.setImagem(bytes);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        produtoImagens.setProduto(produto);
+        produtoImagens.setDataCriacao(byProdutoId.get(0).getDataCriacao());
         produtoImagens.setDataAtualizacao(new Date());
-        return produtoImagensRepository.saveAndFlush(produtoImagens);
+        produto.getImagens().add(produtoImagens);
     }
 
     public void delete(Long id) {

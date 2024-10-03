@@ -13,16 +13,10 @@ public class ProdutoPostRequestBody {
 
     @NotBlank(message = "Campo NOME Obrigatório")
     private String nome;
-
     private String descricao;
-
     @NotNull(message = "Campo PREÇO Obrigatório")
     private Double preco;
-
     @FutureOrPresent(message = "Campo Data Inválido")
     private LocalDate data_validade;
-
-    private String image;
-
     private Categoria categoria;
 }

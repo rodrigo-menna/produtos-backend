@@ -51,19 +51,20 @@ public class ProdutoService {
         return this.produtoRepository.findAll(pageable);
     }
 
-    public void update(ProdutoPutRequestBody requestBody) throws BadRequestException {
+    public void update(ProdutoPutRequestBody requestBody) {
         Produto found = findById(requestBody.getId());
         Produto produto = ProdutoMapper.INSTANCE.toPutProduto(requestBody);
         produto.setId(found.getId());
         this.produtoRepository.save(produto);
     }
 
-    public void updateWithImage(ProdutoPutRequestBody requestBody, MultipartFile file) throws BadRequestException {
+    public void updateWithFile(ProdutoPutRequestBody requestBody, MultipartFile file)  {
         Produto found = findById(requestBody.getId());
         Produto produto = ProdutoMapper.INSTANCE.toPutProduto(requestBody);
         produto.setId(found.getId());
-//        List<ProdutoImageResponseBody> byProdutoId = produtoImagensService.findByProdutoId(requestBody.getId());
-
+        produto.setDataCriacao(found.getDataCriacao());
+        produto.setDataAtualizacao(new Date());
+        produtoImagensService.updateWithFile(produto, file);
         this.produtoRepository.save(produto);
     }
 

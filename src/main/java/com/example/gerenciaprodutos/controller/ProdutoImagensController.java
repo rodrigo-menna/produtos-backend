@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/produtoImagens")
+@RequestMapping("/api/produtoImagem")
 public class ProdutoImagensController {
 
     @Autowired
@@ -21,15 +21,9 @@ public class ProdutoImagensController {
         return produtoImagensService.findAll();
     }
 
-    @GetMapping("/find/produto/{id}")
+    @GetMapping("/find/{id}")
     public List<ProdutoImagem> findById(@PathVariable("id") Long id) {
         return produtoImagensService.findByProdutoId(id);
-    }
-
-    @PatchMapping("/update")
-    public ResponseEntity<Void> update(@RequestBody ProdutoImagem produtoImagens){
-        produtoImagensService.update(produtoImagens);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/delete/{id}")

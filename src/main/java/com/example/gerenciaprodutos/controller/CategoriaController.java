@@ -25,8 +25,9 @@ public class CategoriaController {
 
     @Transactional
     @PostMapping("/create")
-    public ResponseEntity<Categoria> create(@RequestBody @Valid CategoriaPostRequestBody categoriaPostRequestBody) {
-        return new ResponseEntity<>(service.create(categoriaPostRequestBody), HttpStatus.CREATED);
+    public ResponseEntity<Void> create(@RequestBody @Valid CategoriaPostRequestBody categoriaPostRequestBody) {
+        service.create(categoriaPostRequestBody);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/get")
